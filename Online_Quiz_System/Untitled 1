@@ -1,0 +1,186 @@
+//	@PostMapping(value = "addquiz1")
+//	public ModelAndView addQuiz(HttpServletRequest request) {
+//		int c=Integer.parseInt(request.getParameter("count"));
+//		Options option;
+//		List<Options> list = new ArrayList<>();
+//		for(int i=0;i<c;i++) {
+//			option = new Options();
+//			option.setChoice(request.getParameter("option"+i));
+//			list.add(option);
+//		}
+//		Question question = new Question();
+//		question.setName(request.getParameter("quename"));
+//		question.setList(list);
+//		question.setAns(request.getParameter("answer"));
+//		question.setMark(Integer.parseInt(request.getParameter("mark")));
+//		question.setQuiz(quizService.getQuiz(request.getParameter("name")));
+//		try {
+//			questionService.addQuestion(question);
+//		} catch (QuestionException e) {
+//		}
+//		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.setViewName("QuizTemplate");
+//		modelAndView.addObject("input", "secound");
+//        modelAndView.addObject("name", request.getParameter("name"));
+//		return modelAndView;
+//	}
+
+
+
+//	@PostMapping(value = "addquestion")
+//	public ModelAndView addQuestion(HttpServletRequest request) {
+//		int c=Integer.parseInt(request.getParameter("count"));
+//		Options option;
+//		List<Options> list = new ArrayList<>();
+//		for(int i=0;i<c;i++) {
+//			option = new Options();
+//			option.setChoice(request.getParameter("option"+i));
+//			list.add(option);
+//		}
+//		Question question = new Question();
+//		question.setName(request.getParameter("quename"));
+//		question.setList(list);
+//		question.setAns(request.getParameter("answer"));
+//		question.setMark(Integer.parseInt(request.getParameter("mark")));
+//		question.setQuiz(quizService.getQuiz(request.getParameter("name")));
+//		try {
+//			questionService.addQuestion(question);
+//		} catch (QuestionException e) {
+//			ModelAndView modelAndView = new ModelAndView();
+//			modelAndView.setViewName("Error");
+//			return modelAndView;
+//		}
+//		
+//		return quizController.showName();
+//	}
+
+
+
+	
+//	@RequestMapping(value ="/edit")
+//	public ModelAndView update(@RequestBody Question questions ) {
+//		ModelAndView modelAndView = new ModelAndView();
+//		System.out.println(questions);
+//      // Question question = questionService.getQuizQuestion(string[0]).stream().filter(q->q.getName().equals(string[1])).findAny().get();
+//		modelAndView.addObject("question", questions);
+//		modelAndView.setViewName("UpdateQuestion");
+//		return modelAndView;
+//	}
+//	
+//	@GetMapping(value = "/editquestion")
+//	public ModelAndView updateQuestion(Question question) {
+//		ModelAndView modelAndView = new ModelAndView();
+//	
+//		System.out.println(question);
+//		questionService.updateQuestion(question);
+//		modelAndView.addObject("question", question);
+//		modelAndView = quizController.edit();
+//		return modelAndView;
+//	}
+	
+	
+	
+	
+		
+//	@GetMapping(value = "/logout")
+//	public ModelAndView logout(HttpServletRequest request) {
+//		//sessionStatus.setComplete();
+//		HttpSession session = request.getSession();
+//		session.invalidate();
+//		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.setViewName("Home");
+//		return modelAndView;
+//		
+//	}
+
+
+
+	public List<Question> getQuizQuestion(String testName) {
+		Quiz quiz = quizDao.getTestQuestion(testName).orElseThrow(() -> new NoResultException(" quiz not found"));
+		return quiz.getList();
+	}
+
+	
+	/	@Test
+//	void quizTemplate1() throws Exception {
+//		when(quizService.checkQuiz("java")).thenReturn(true);
+//		doThrow(new QuizException()).when(quizService).addQuiz(new Quiz());
+//		mockMvc.perform(post("/quiz/addquestion").param("count", "1").
+//				param("option1", "True").param("quename", "java is").param("answer", "A").param("mark", "1").param("name", "java")).
+//		andExpect(view().name("QuizTemplate"));
+//	}
+
+
+
+@PostMapping("/validate")
+	public ModelAndView validate(HttpServletRequest request) {
+		String option = request.getParameter("option");
+		if (option!=null) {
+			String ans = request.getParameter("answer");
+			String m = request.getParameter("mark");
+			if (option.trim().equals(ans)) {
+				mark = mark + Integer.parseInt(m);
+			}
+		}
+		i++;
+		ModelAndView view = new ModelAndView();
+		view.setViewName("redirect:/user/loadquiz");
+		return view;
+	}
+	
+	
+	
+	{
+ 
+    "quizName": "sl",
+    "list": [
+        {
+            "name": "htmlddd is",
+            "list": [
+                {         
+                    "choice": "databassse lang"
+                },
+                {            
+                    "choice": "programing lan"
+                }
+            ],
+            "ans": "A",
+            "mark": 1
+            
+        }
+    ]
+}
+
+
+
+	@PostMapping(value = "/admin")
+	public String adminLoginDetailValidate(@RequestBody AdminDTO adminDTO) throws UserNotFound {
+		Admin admin = mapper.map(adminDTO, Admin.class);
+		loginService.validateAdminDetails(admin);
+		return "login succesfully";
+	}
+	
+
+	@PostMapping(value = "/user")
+	public String userLoginDetailValidate(@RequestBody UserDTO userDTO) throws UserNotFound {
+		User user = mapper.map(userDTO, User.class);
+		//loginService.validateUserDetails(user);
+		return "login succesfully";
+	}
+
+	
+	@PostMapping(value = "/user/register")
+	@PreAuthorize("hasAnyAuthority('ADMIN')")
+	public String register(@RequestBody UserDTO userDTO) throws UserNotFound {
+		User user = mapper.map(userDTO, User.class);
+		loginService.addUser(user);
+		return "User register succesfully";
+	}
+	
+//	@GetMapping(value = "/admin")
+//	public String changeAdminPassword(@RequestBody AdminDTO adminDTO) throws UserNotFound {
+//		Admin admin = mapper.map(adminDTO, Admin.class);
+//		
+//		loginService.validateAdminDetails(admin);
+//		return "login succesfully";
+//	}
